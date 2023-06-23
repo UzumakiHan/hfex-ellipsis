@@ -1,6 +1,6 @@
 {
   "name": "hfex-ellipsis",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "多行文本展开与收起",
   "main": "dist/vue3/cjs/index.js",
   "module": "dist/vue3/esm/index.js",
