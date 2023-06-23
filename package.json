@@ -1,0 +1,84 @@
+{
+  "name": "hfex-ellipsis",
+  "version": "0.0.0",
+  "description": "多行文本展开与收起",
+  "main": "dist/vue3/cjs/index.js",
+  "module": "dist/vue3/esm/index.js",
+  "type": "module",
+  "types": "./typings/typing.d.ts",
+  "scripts": {
+    "lint-staged": "lint-staged",
+    "buildvue2": "rollup -c rollup.vue2.config.js",
+    "buildvue3": "rollup -c rollup.vue3.config.js",
+    "buildAll": "rimraf dist && npm run buildvue2 && npm run buildvue3"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "typings"
+  ],
+  "keywords": [],
+  "author": "UzumakiHan",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.21.8",
+    "@babel/plugin-transform-runtime": "^7.21.4",
+    "@babel/preset-env": "^7.21.5",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-terser": "^0.4.3",
+    "@rollup/plugin-typescript": "^11.1.1",
+    "@vue/compiler-sfc": "^3.3.4",
+    "autoprefixer": "^10.4.14",
+    "core-js": "^3.30.2",
+    "eslint": "^8.41.0",
+    "eslint-config-hfex": "^1.1.0",
+    "hfex-prettier-config": "^1.0.0",
+    "hfex-stylelint-config": "^1.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
+    "rollup": "^3.23.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-vue2": "npm:rollup-plugin-vue@^5.1.9",
+    "rollup-plugin-vue3": "npm:rollup-plugin-vue@^6.0.0",
+    "sass": "^1.62.1",
+    "stylelint": "^15.6.2",
+    "typescript": "^5.0.4",
+    "vue-template-compiler": "^2.7.14"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "hfex"
+    ]
+  },
+  "stylelint": {
+    "extends": [
+      "hfex-stylelint-config/src/rules/vue"
+    ]
+  },
+  "prettier": "hfex-prettier-config",
+  "lint-staged": {
+    "src/**/*.{ts,js,json,vue,jsx,tsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "src/**/*.{html,vue,scss,css,less}": [
+      "stylelint --fix",
+      "git add"
+    ],
+    "src/**/*.{js,vue,scss,css,less,json,ts}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
