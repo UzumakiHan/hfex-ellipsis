@@ -18,14 +18,13 @@
     </div>
 </template>
 
-<script lang="ts">
-import {computed, defineComponent, onMounted, ref, nextTick} from 'vue';
-
-export default defineComponent({
+<script>
+export default {
     name: 'HfexEllipsis',
     props: {
         text: {
             type: String,
+            default: '',
             required: true
         },
         maxLines: {
@@ -37,110 +36,91 @@ export default defineComponent({
             default: 100
         }
     },
-    setup(props) {
-        const expanded = ref(false);
-        const slotBoxWidth = ref(0);
-        const showSlotNode = ref(false);
-        const textOverflow = ref();
-        const overEllipsis = ref();
-        const slotRef = ref();
-        const offset = ref(props.text.length);
-        const textBoxWidth = ref(props.width);
+    data() {
+        return {
+            expanded: false,
+            slotBoxWidth: 0,
+            showSlotNode: false,
 
-        const boxStyle = computed(() => {
-            if (props.width) {
+            offset: this.text.length,
+            textBoxWidth: this.width
+        };
+    },
+    computed: {
+        boxStyle() {
+            if (this.width) {
                 return {
-                    width: `${props.width}%`
+                    width: `${this.width}%`
                 };
             } else {
                 return '';
             }
-        });
-        const realText = computed(() => {
+        },
+        realText() {
             // 是否被截取
-            const isCutOut = offset.value !== props.text.length;
-            let realTextDesc = props.text;
-            if (isCutOut && !expanded.value) {
-                realTextDesc = `${props.text.slice(0, offset.value)}...`;
+            const isCutOut = this.offset !== this.text.length;
+            let realTextDesc = this.text;
+            if (isCutOut && !this.expanded) {
+                realTextDesc = `${this.text.slice(0, this.offset)}...`;
             }
             return realTextDesc;
-        });
-        const getLines = () => {
-            const clientRects = overEllipsis.value.getClientRects();
+        }
+    },
+    mounted() {
+        const {len} = this.getLines();
+        if (len > this.maxLines) {
+            this.showSlotNode = true;
+            this.$nextTick(() => {
+                this.slotBoxWidth = this.$refs.slotRef.clientWidth;
+                this.textBoxWidth = this.$refs.textOverflow.clientWidth;
+                this.calculateOffset(0, this.text.length);
+            });
+        }
+    },
+    methods: {
+        getLines() {
+            const clientRects = this.$refs.overEllipsis.getClientRects();
             return {
                 len: clientRects.length,
                 lastWidth: clientRects[clientRects.length - 1].width
             };
-        };
-        const isOverflow = () => {
-            const {len, lastWidth} = getLines();
+        },
+        isOverflow() {
+            const {len, lastWidth} = this.getLines();
 
-            if (len < props.maxLines) {
+            if (len < this.maxLines) {
                 return false;
             }
-            if (props.maxLines) {
+            if (this.maxLines) {
                 // 超出部分 行数 > 最大行数 或则  已经是最大行数但最后一行宽度 + 后面内容超出正常宽度
                 const lastLineOver = Boolean(
-                    len === props.maxLines && lastWidth + slotBoxWidth.value > textBoxWidth.value
+                    len === this.maxLines && lastWidth + this.slotBoxWidth > this.textBoxWidth
                 );
-                if (len > props.maxLines || lastLineOver) {
+                if (len > this.maxLines || lastLineOver) {
                     return true;
                 }
             }
             return false;
-        };
-
-        const calculateOffset = (from, to) => {
-            nextTick(() => {
+        },
+        calculateOffset(from, to) {
+            this.$nextTick(() => {
                 if (Math.abs(from - to) <= 1) {
                     return;
                 }
-                if (isOverflow()) {
-                    to = offset.value;
+                if (this.isOverflow()) {
+                    to = this.offset;
                 } else {
-                    from = offset.value;
+                    from = this.offset;
                 }
-                offset.value = Math.floor((from + to) / 2);
-                calculateOffset(from, to);
+                this.offset = Math.floor((from + to) / 2);
+                this.calculateOffset(from, to);
             });
-        };
-
-        const toggle = () => {
-            expanded.value = !expanded.value;
-        };
-
-        onMounted(() => {
-            const {len} = getLines();
-            if (len > props.maxLines) {
-                showSlotNode.value = true;
-                nextTick(() => {
-                    slotBoxWidth.value = slotRef.value.clientWidth;
-                    textBoxWidth.value = textOverflow.value.clientWidth;
-                    calculateOffset(0, props.text.length);
-                });
-            }
-        });
-        return {
-            // text,
-            //   maxLines,
-            //   width,
-            textOverflow,
-            slotRef,
-            showSlotNode,
-            offset,
-            expanded,
-            slotBoxWidth,
-            textBoxWidth,
-            boxStyle,
-            realText,
-            overEllipsis,
-            calculateOffset,
-            isOverflow,
-            getLines,
-            toggle
-        };
+        },
+        toggle() {
+            this.expanded = !this.expanded;
+        }
     }
-});
+};
 </script>
 <style scoped lang="scss">
 .slot-box {
