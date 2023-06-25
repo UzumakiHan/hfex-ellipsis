@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/UzumakiHan/hfex-ellipsis/compare/v1.0.0...v1.1.0) (2023-06-25)
+
+
+### ✨ Features | 新功能
+
+* 重新用vue2的写法重构组件 ([3894a3c](https://github.com/UzumakiHan/hfex-ellipsis/commit/3894a3cf5108c755960aee1641335c96657f85e1))
+
+
+### 👷‍ Build System | 构建
+
+* Update build dist ([328f9b9](https://github.com/UzumakiHan/hfex-ellipsis/commit/328f9b901633f3a88832a70749d3424630873e2a))
+
 ## 1.0.0 (2023-06-23)
 
 
